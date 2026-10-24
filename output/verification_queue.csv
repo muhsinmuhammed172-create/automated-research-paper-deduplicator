@@ -1,0 +1,5 @@
+title,author,doi,year,normalized_title,normalized_author,normalized_doi,duplicate_status,matched_record,title_similarity,record_key,verification_status,reviewer_decision
+Machine Learning for Disease Prediction,A Kumar,10.1234/abc,2024,machine learning for disease prediction,a kumar,10.1234/abc,Duplicate,1,0.0,7aae510792a444ee000b22acfe84c5948f162f7eba34d514dc3b7a343ae7d966,Confirmed Duplicate,Confirmed Duplicate
+Machine Learning-Based Disease Prediction,A. Kumar,10.1234/abc,2024,machine learning based disease prediction,a kumar,10.1234/abc,Duplicate,1,0.0,da6047b3b90c2102129b4a1260ba3eecab401d24713f624bb84310da563120d0,Not Duplicate,Not Duplicate
+Machine Learning for Disease Prediction,A Kumar,,2024,machine learning for disease prediction,a kumar,,Duplicate,1,0.0,06d5b0f85a04781ba2f4b5b70027e5bcbad6a4e0b2b3fdc8d37806a7580dcf13,Confirmed Duplicate,Confirmed Duplicate
+Machine Learning for Disease Predction,A Kumar,,2024,machine learning for disease predction,a kumar,,Potential Duplicate,5,98.7012987012987,6396f0f5c15733fd202d2e44dbd50b0b4f0b5f85fa53ad19f27941941985a441,Pending,

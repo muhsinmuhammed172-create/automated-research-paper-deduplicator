@@ -1,0 +1,7 @@
+title,author,doi,year,normalized_title,normalized_author,normalized_doi,duplicate_status,matched_record,title_similarity
+Machine Learning for Disease Prediction,A Kumar,10.1234/abc,2024,machine learning for disease prediction,a kumar,10.1234/abc,Distinct,,0.0
+Machine Learning for Disease Prediction,A Kumar,10.1234/abc,2024,machine learning for disease prediction,a kumar,10.1234/abc,Duplicate,1,0.0
+Deep Learning for Medical Diagnosis,S Thomas,10.5678/xyz,2023,deep learning for medical diagnosis,s thomas,10.5678/xyz,Distinct,,59.45945945945945
+Machine Learning-Based Disease Prediction,A. Kumar,10.1234/abc,2024,machine learning based disease prediction,a kumar,10.1234/abc,Duplicate,1,0.0
+Machine Learning for Disease Prediction,A Kumar,,2024,machine learning for disease prediction,a kumar,,Duplicate,1,0.0
+Machine Learning for Disease Predction,A Kumar,,2024,machine learning for disease predction,a kumar,,Potential Duplicate,5,98.7012987012987
