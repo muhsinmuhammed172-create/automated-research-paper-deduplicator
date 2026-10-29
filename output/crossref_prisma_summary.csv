@@ -1,0 +1,11 @@
+metric,count
+Records identified in input,500
+Duplicate candidates detected by algorithm,2
+Potential duplicates detected by algorithm,3
+Candidates requiring manual verification,5
+Candidates reviewed,5
+Candidates confirmed as duplicates by reviewer,4
+Candidates marked Not Duplicate,1
+Candidates awaiting review,0
+Records removed as confirmed duplicates,4
+Records remaining after deduplication,496
