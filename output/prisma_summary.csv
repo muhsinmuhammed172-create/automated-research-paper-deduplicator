@@ -1,6 +1,8 @@
 metric,count
 Records identified in input,6
-Duplicate records confirmed by reviewer,2
-Candidates rejected as duplicates,1
-Candidates awaiting review,1
-Records remaining after confirmed removals,4
+Duplicate candidates detected by algorithm,3
+Potential duplicates detected by algorithm,1
+Duplicate records confirmed by reviewer,3
+Candidates marked Not Duplicate,1
+Candidates awaiting review,0
+Estimated records remaining after confirmed removals,3
