@@ -4,8 +4,12 @@ import pandas as pd
 from uuid import uuid4
 
 
-def normalize_text(value):
-    """Normalize text for metadata comparison."""
+def normalize_text(value) -> str:
+    """Normalize text for metadata comparison.
+
+    Lowercases, strips punctuation, and collapses whitespace so that
+    minor formatting differences do not prevent a match.
+    """
     if pd.isna(value):
         return ""
 
@@ -13,10 +17,24 @@ def normalize_text(value):
     value = re.sub(r"[^\w\s]", " ", value)
     value = re.sub(r"\s+", " ", value)
 
-    return value
+    return value.strip()
 
 
-def normalize_papers(papers):
+def normalize_author(value) -> str:
+    """Normalize an author string for comparison.
+
+    Sorts name tokens so that "Saleem, Muhammad" and "Muhammad Saleem"
+    compare as equal after normalization.
+    """
+    text = normalize_text(value)
+    if not text:
+        return ""
+    # Sort individual name tokens to handle different orderings.
+    tokens = sorted(text.split())
+    return " ".join(tokens)
+
+
+def normalize_papers(papers: pd.DataFrame) -> pd.DataFrame:
     """Normalize metadata and ensure every paper has a unique ID."""
     papers = papers.copy().reset_index(drop=True)
 
@@ -46,13 +64,10 @@ def normalize_papers(papers):
         if not papers.at[index, "record_id"]:
             papers.at[index, "record_id"] = f"REC-{uuid4().hex}"
 
-    papers["normalized_title"] = (
-        papers["title"].apply(normalize_text)
-    )
+    papers["normalized_title"] = papers["title"].apply(normalize_text)
 
-    papers["normalized_author"] = (
-        papers["author"].apply(normalize_text)
-    )
+    # Use author-sort normalization for more robust author matching.
+    papers["normalized_author"] = papers["author"].apply(normalize_author)
 
     if "doi" in papers.columns:
         papers["normalized_doi"] = (

@@ -1,52 +1,73 @@
 
-import hashlib
-import json
+"""SHA-256 file-level duplicate detection.
+
+This module provides the canonical ``calculate_file_hash`` function
+(imported from ``src.utils``) and a lightweight helper for checking
+whether a file has been seen before, backed by the ``file_hash``
+column that ``pdf_ingestion.py`` stores in
+``output/pdf_extracted_metadata.csv``.
+
+The earlier standalone JSON-database approach has been removed to
+avoid having two disconnected deduplication systems.  The CSV is now
+the single source of truth for file hashes.
+"""
+
 from pathlib import Path
 
-HASH_DATABASE = Path("output/processed_files.json")
+import pandas as pd
+
+from src.utils import calculate_file_hash   # single shared implementation
+
+EXTRACTED_METADATA = Path("output/pdf_extracted_metadata.csv")
 
 
-def calculate_file_hash(file_path):
-    """Calculate the SHA-256 hash of a file."""
-    sha256 = hashlib.sha256()
+def find_file_duplicates(metadata_csv: Path = EXTRACTED_METADATA) -> pd.DataFrame:
+    """Identify rows in the extracted-metadata CSV that share the same
+    SHA-256 hash, indicating identical PDF files.
 
-    with open(file_path, "rb") as file:
-        for chunk in iter(lambda: file.read(4096), b""):
-            sha256.update(chunk)
+    Returns a DataFrame of duplicate rows with an added
+    ``duplicate_of_file`` column showing the first occurrence's
+    filename.
+    """
+    if not metadata_csv.exists():
+        raise FileNotFoundError(
+            f"Metadata CSV not found: {metadata_csv}\n"
+            "Run 'python src/pdf_ingestion.py' first."
+        )
 
-    return sha256.hexdigest()
+    df = pd.read_csv(metadata_csv).fillna("")
+
+    if "file_hash" not in df.columns:
+        raise ValueError("file_hash column missing from metadata CSV.")
+
+    # First occurrence of each hash is the "primary" file.
+    first_seen = (
+        df.drop_duplicates(subset=["file_hash"], keep="first")
+        .set_index("file_hash")["filename"]
+    )
+
+    duplicates = df[df.duplicated(subset=["file_hash"], keep="first")].copy()
+    duplicates["duplicate_of_file"] = duplicates["file_hash"].map(first_seen)
+
+    return duplicates
 
 
-def load_processed_files():
-    """Load previously recorded file hashes."""
-    if HASH_DATABASE.exists():
-        with open(HASH_DATABASE, "r", encoding="utf-8") as file:
-            return json.load(file)
+def report_file_duplicates(metadata_csv: Path = EXTRACTED_METADATA) -> None:
+    """Print a summary of exact file-level duplicates."""
+    duplicates = find_file_duplicates(metadata_csv)
 
-    return {}
+    if duplicates.empty:
+        print("No exact file-level duplicates found.")
+        return
+
+    print(f"File-level duplicates detected: {len(duplicates)}")
+    print()
+    for _, row in duplicates.iterrows():
+        print(f"  Duplicate : {row['filename']}")
+        print(f"  Original  : {row['duplicate_of_file']}")
+        print(f"  SHA-256   : {row['file_hash']}")
+        print()
 
 
-def check_and_register_file(file_path):
-    """Check whether a file was processed before."""
-    file_path = Path(file_path)
-
-    if not file_path.is_file():
-        raise FileNotFoundError(f"File not found: {file_path}")
-
-    file_hash = calculate_file_hash(file_path)
-    processed = load_processed_files()
-
-    if file_hash in processed:
-        print(f"Duplicate file: {file_path}")
-        print(f"Previously processed as: {processed[file_hash]}")
-        return False
-
-    HASH_DATABASE.parent.mkdir(parents=True, exist_ok=True)
-    processed[file_hash] = str(file_path)
-
-    with open(HASH_DATABASE, "w", encoding="utf-8") as file:
-        json.dump(processed, file, indent=4)
-
-    print(f"New file registered: {file_path}")
-    print(f"SHA-256: {file_hash}")
-    return True
+if __name__ == "__main__":
+    report_file_duplicates()

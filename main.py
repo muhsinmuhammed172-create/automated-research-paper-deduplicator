@@ -1,11 +1,22 @@
 
+"""Main entry point for the metadata-based deduplication pipeline.
+
+Usage
+-----
+python main.py --input crossref
+python main.py --input synthetic
+python main.py --input plant_test
+"""
+
 import argparse
-import pandas as pd
 from pathlib import Path
+
+import pandas as pd
 
 from src.paper_deduplication import detect_paper_duplicates
 from src.preprocessing import normalize_papers
 from src.verification import create_verification_queue
+
 
 DEFAULT_INPUT = Path("data/sample/papers.csv")
 CROSSREF_INPUT = Path("data/sample/crossref_papers.csv")
@@ -15,7 +26,7 @@ PROCESSED_DIR = Path("data/processed")
 OUTPUT_DIR = Path("output")
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(
         description="Research-paper deduplication system"
     )
@@ -23,11 +34,10 @@ def main():
         "--input",
         choices=["synthetic", "crossref", "plant_test"],
         default="synthetic",
-        help="Choose the dataset to process"
+        help="Choose the dataset to process",
     )
     args = parser.parse_args()
 
-    # Keep each dataset's IDs, results and review queue separate.
     if args.input == "crossref":
         input_file = CROSSREF_INPUT
         dataset_name = "crossref"
@@ -56,14 +66,11 @@ def main():
     if processed_file.exists():
         saved = pd.read_csv(processed_file).fillna("")
 
-        same_records = (
-            len(saved) == len(papers)
-            and all(
-                str(saved.iloc[i].get("title", "")) == str(papers.iloc[i].get("title", ""))
-                and str(saved.iloc[i].get("author", "")) == str(papers.iloc[i].get("author", ""))
-                and str(saved.iloc[i].get("doi", "")) == str(papers.iloc[i].get("doi", ""))
-                for i in range(len(papers))
-            )
+        same_records = len(saved) == len(papers) and all(
+            str(saved.iloc[i].get("title", "")) == str(papers.iloc[i].get("title", ""))
+            and str(saved.iloc[i].get("author", "")) == str(papers.iloc[i].get("author", ""))
+            and str(saved.iloc[i].get("doi", "")) == str(papers.iloc[i].get("doi", ""))
+            for i in range(len(papers))
         )
 
         if same_records and "record_id" in saved.columns:
@@ -86,11 +93,9 @@ def main():
     display_columns = [
         "record_id", "title", "author", "doi",
         "duplicate_status", "matched_record",
-        "title_similarity", "match_reason"
+        "title_similarity", "match_reason",
     ]
-    display_columns = [
-        col for col in display_columns if col in results.columns
-    ]
+    display_columns = [col for col in display_columns if col in results.columns]
 
     print("\nDetection results:")
     print(results[display_columns].to_string(index=False))
@@ -98,18 +103,19 @@ def main():
     print("\nTotal records:", len(results))
     print(
         "Duplicate candidates:",
-        (results["duplicate_status"] == "Duplicate").sum()
+        (results["duplicate_status"] == "Duplicate").sum(),
     )
     print(
         "Potential duplicates:",
-        (results["duplicate_status"] == "Potential Duplicate").sum()
+        (results["duplicate_status"] == "Potential Duplicate").sum(),
     )
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     results.to_csv(output_file, index=False)
     print("\nDetection results saved:", output_file)
 
-    queue = create_verification_queue(results)
+    # Pass dataset_name so the queue is written to the correct file.
+    queue = create_verification_queue(results, dataset=dataset_name)
     queue.to_csv(queue_file, index=False)
 
     print("Verification queue saved:", queue_file)
@@ -118,7 +124,7 @@ def main():
     if "verification_status" in queue.columns:
         print(
             "Pending reviews:",
-            (queue["verification_status"] == "Pending").sum()
+            (queue["verification_status"] == "Pending").sum(),
         )
 
 

@@ -5,8 +5,21 @@ from src.preprocessing import normalize_papers
 from src.similarity import calculate_title_similarity
 
 
-def detect_paper_duplicates(papers, similarity_threshold=85):
-    """Detect duplicate and potential-duplicate paper records."""
+def detect_paper_duplicates(papers: pd.DataFrame, similarity_threshold: float = 85) -> pd.DataFrame:
+    """Detect duplicate and potential-duplicate paper records.
+
+    Three matching rules are applied in priority order for every pair
+    (i, j) where j < i:
+
+    Rule 1 — Matching non-empty normalised DOI → Duplicate
+    Rule 2 — Exact normalised title match (author optional) → Duplicate
+    Rule 3 — Fuzzy title similarity ≥ threshold → Potential Duplicate
+
+    Rule 2 previously required both title AND author to be non-empty,
+    which caused exact-title matches to be missed when author metadata
+    was absent.  The revised rule matches on title alone when both
+    records lack author information.
+    """
 
     papers = normalize_papers(papers).reset_index(drop=True)
 
@@ -36,7 +49,7 @@ def detect_paper_duplicates(papers, similarity_threshold=85):
 
             matched_id = str(papers.loc[j, "record_id"])
 
-            # Rule 1: Matching non-empty DOI.
+            # ── Rule 1: Matching non-empty DOI ───────────────────────────
             if doi_i and doi_j and doi_i == doi_j:
                 papers.loc[i, "duplicate_status"] = "Duplicate"
                 papers.loc[i, "matched_record"] = matched_id
@@ -46,22 +59,29 @@ def detect_paper_duplicates(papers, similarity_threshold=85):
                 )
                 break
 
-            # Rule 2: Exact normalized title and author match.
+            # ── Rule 2a: Exact title + matching authors ───────────────────
             if (
                 title_i
-                and author_i
                 and title_i == title_j
+                and author_i
+                and author_j
                 and author_i == author_j
             ):
                 papers.loc[i, "duplicate_status"] = "Duplicate"
                 papers.loc[i, "matched_record"] = matched_id
-                papers.loc[i, "match_reason"] = (
-                    "Exact Title and Author Match"
-                )
+                papers.loc[i, "match_reason"] = "Exact Title and Author Match"
                 papers.loc[i, "title_similarity"] = 100.0
                 break
 
-            # Rule 3: Fuzzy title similarity.
+            # ── Rule 2b: Exact title when both records have no author ─────
+            if title_i and title_i == title_j and not author_i and not author_j:
+                papers.loc[i, "duplicate_status"] = "Duplicate"
+                papers.loc[i, "matched_record"] = matched_id
+                papers.loc[i, "match_reason"] = "Exact Title Match (no author)"
+                papers.loc[i, "title_similarity"] = 100.0
+                break
+
+            # ── Rule 3: Fuzzy title similarity ───────────────────────────
             if title_i and title_j:
                 score = calculate_title_similarity(title_i, title_j)
 
@@ -75,9 +95,7 @@ def detect_paper_duplicates(papers, similarity_threshold=85):
             papers.loc[i, "title_similarity"] = best_score
 
             if best_score >= similarity_threshold:
-                papers.loc[i, "duplicate_status"] = (
-                    "Potential Duplicate"
-                )
+                papers.loc[i, "duplicate_status"] = "Potential Duplicate"
                 papers.loc[i, "matched_record"] = best_match_id
                 papers.loc[i, "match_reason"] = best_match_reason
 

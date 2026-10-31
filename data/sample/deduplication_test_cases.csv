@@ -1,0 +1,14 @@
+
+record_id,title,author,doi
+T01,Deep Learning for Plant Disease Detection,A Smith,10.1000/test001
+T02,Deep Learning for Plant Disease Detection,A Smith,10.1000/test001
+T03,Plant Disease Detection Using Deep Learning,B Jones,10.1000/test003
+T04,Plant Disease Detection Using Deep Learning,B Jones,10.1000/test004
+T05,Plant Disease Detection Using Deep Learning,C Brown,10.1000/test005
+T06,Plant Disease Detection Through Deep Learning,C Brown,10.1000/test006
+T07,Completely Different Research Topic,D White,10.1000/test007
+T08,Deep Learning for Plant Disease Detection,A Smith,
+T09,Deep Learning for Plant Disease Detection,A Smith,
+T10,Plant Disease Detection Using Deep Learning,B Jones,
+T11,Plant Disease Detection Using Deep Learning,B Jones,
+T12,Plant Disease Detection for Crop Health,E Green,10.1000/test012

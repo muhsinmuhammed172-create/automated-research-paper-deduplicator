@@ -1,0 +1,19 @@
+metric,count
+Records identified in input,6
+Duplicate candidates detected by algorithm,3
+Potential duplicates detected by algorithm,1
+Candidates confirmed as duplicates by reviewer,2
+Candidates marked Not Duplicate,1
+Candidates awaiting review,1
+Estimated records remaining after confirmed removals,4
+Records in screening queue,0
+Records screened at title and abstract level,0
+Records included for full-text assessment,0
+Records excluded during title and abstract screening,0
+Records awaiting title and abstract screening,0
+Records selected for full-text eligibility queue,0
+Full-text eligibility assessments completed,0
+Full-text reports excluded,0
+Full-text exclusions with recorded reasons,0
+Studies included in final review,0
+Records awaiting full-text eligibility assessment,0

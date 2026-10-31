@@ -1,0 +1,8 @@
+{
+  "run_id": "run_001",
+  "name": "Run 001 \u2013 3 Research Papers",
+  "created_at": "2026-10-31 14:19:51",
+  "pdf_count": 3,
+  "status": "error",
+  "error": "'charmap' codec can't encode character '\\u2265' in position 15: character maps to <undefined>"
+}

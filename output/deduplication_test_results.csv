@@ -1,0 +1,13 @@
+record_id,title,author,doi,normalized_title,normalized_author,normalized_doi,duplicate_status,matched_record,title_similarity,match_reason
+T01,Deep Learning for Plant Disease Detection,A Smith,10.1000/test001,deep learning for plant disease detection,a smith,10 1000 test001,Distinct,,0.0,
+T02,Deep Learning for Plant Disease Detection,A Smith,10.1000/test001,deep learning for plant disease detection,a smith,10 1000 test001,Duplicate,T01,100.0,DOI Match
+T03,Plant Disease Detection Using Deep Learning,B Jones,10.1000/test003,plant disease detection using deep learning,b jones,10 1000 test003,Distinct,,54.761904761904766,
+T04,Plant Disease Detection Using Deep Learning,B Jones,10.1000/test004,plant disease detection using deep learning,b jones,10 1000 test004,Duplicate,T03,100.0,Exact Title and Author Match
+T05,Plant Disease Detection Using Deep Learning,C Brown,10.1000/test005,plant disease detection using deep learning,c brown,10 1000 test005,Potential Duplicate,T03,100.0,Title Similarity
+T06,Plant Disease Detection Through Deep Learning,C Brown,10.1000/test006,plant disease detection through deep learning,c brown,10 1000 test006,Potential Duplicate,T03,90.9090909090909,Title Similarity
+T07,Completely Different Research Topic,D White,10.1000/test007,completely different research topic,d white,10 1000 test007,Distinct,,42.50000000000001,
+T08,Deep Learning for Plant Disease Detection,A Smith,,deep learning for plant disease detection,a smith,,Duplicate,T01,100.0,Exact Title and Author Match
+T09,Deep Learning for Plant Disease Detection,A Smith,,deep learning for plant disease detection,a smith,,Duplicate,T01,100.0,Exact Title and Author Match
+T10,Plant Disease Detection Using Deep Learning,B Jones,,plant disease detection using deep learning,b jones,,Duplicate,T03,100.0,Exact Title and Author Match
+T11,Plant Disease Detection Using Deep Learning,B Jones,,plant disease detection using deep learning,b jones,,Duplicate,T03,100.0,Exact Title and Author Match
+T12,Plant Disease Detection for Crop Health,E Green,10.1000/test012,plant disease detection for crop health,e green,10 1000 test012,Distinct,,71.42857142857143,

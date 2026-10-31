@@ -1,0 +1,2 @@
+filename,file_path,source,file_hash,title,author,doi,year,extraction_status,duplicate_of_file
+P1_copy.pdf,C:\Users\MUHSIN\OneDrive\Desktop\mini\automated-research-paper-deduplicator\runs\run_002\pdfs\P1_copy.pdf,pdfs,151ce25d20f26400993ccb2d58a6444cd40453c74d9725a3973a3a857371e532,Using Deep Learning for Image-Based Plant Disease Detection,Marcel Salathé,10.3389/fpls.2016.01419,2016,Success,P1.pdf

@@ -1,20 +1,20 @@
-
 from pathlib import Path
-
 import pandas as pd
-
 
 INPUT_FILE = Path("output/pdf_enriched_metadata.csv")
 OUTPUT_FILE = Path("output/pdf_metadata_review.csv")
 
 
-def check_metadata():
-    if not INPUT_FILE.exists():
+def check_metadata(input_file: Path = INPUT_FILE, output_file: Path = OUTPUT_FILE):
+    input_file = Path(input_file)
+    output_file = Path(output_file)
+
+    if not input_file.exists():
         raise FileNotFoundError(
-            f"Metadata file not found: {INPUT_FILE}"
+            f"Metadata file not found: {input_file}"
         )
 
-    df = pd.read_csv(INPUT_FILE).fillna("")
+    df = pd.read_csv(input_file).fillna("")
     review_reasons = []
 
     for _, row in df.iterrows():
@@ -69,14 +69,14 @@ def check_metadata():
     ]
     df["metadata_review_reason"] = review_reasons
 
-    OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
-    df.to_csv(OUTPUT_FILE, index=False)
+    output_file.parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(output_file, index=False)
 
     flagged = (df["metadata_review_required"] == "Yes").sum()
 
     print(f"Total PDF records: {len(df)}")
     print(f"Records flagged for review: {flagged}")
-    print(f"Review file saved to: {OUTPUT_FILE}")
+    print(f"Review file saved to: {output_file}")
 
     if flagged:
         print("\nRecords requiring review:")
@@ -86,6 +86,7 @@ def check_metadata():
                 ["filename", "title", "year", "metadata_review_reason"],
             ].to_string(index=False)
         )
+    return df
 
 
 if __name__ == "__main__":

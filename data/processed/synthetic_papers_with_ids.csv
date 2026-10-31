@@ -1,0 +1,7 @@
+title,author,doi,year,record_id,normalized_title,normalized_author,normalized_doi
+Machine Learning for Disease Prediction,A Kumar,10.1234/abc,2024,REC-616fe6bd972f46978fb834a23c5725f9,machine learning for disease prediction,a kumar,10 1234 abc
+Machine Learning for Disease Prediction,A Kumar,10.1234/abc,2024,REC-3114ba6b778f43f5980ec51d05431b39,machine learning for disease prediction,a kumar,10 1234 abc
+Deep Learning for Medical Diagnosis,S Thomas,10.5678/xyz,2023,REC-d87c2b1ab0264eef94155e0f0c5dcb2a,deep learning for medical diagnosis,s thomas,10 5678 xyz
+Machine Learning-Based Disease Prediction,A. Kumar,10.1234/abc,2024,REC-4d285f681b8941fd8ae11ae76005601a,machine learning based disease prediction,a kumar,10 1234 abc
+Machine Learning for Disease Prediction,A Kumar,,2024,REC-8be564724ca74debbdcce00f4bff3118,machine learning for disease prediction,a kumar,
+Machine Learning for Disease Predction,A Kumar,,2024,REC-82c85248baa848e0b01026abe8eabc94,machine learning for disease predction,a kumar,
